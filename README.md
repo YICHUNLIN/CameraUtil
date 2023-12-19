@@ -23,14 +23,19 @@
 
 > __video
 
+- libcamera.vid
+	- use video method 
+
 > __photo
+
+- libcamera.until
+	- use take picture method
 
 ### public methods
 
 > start
 
 Starting interval by "delaySecond", and select by "type".
-
 
 > end
 
