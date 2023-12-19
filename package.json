@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-
-  },
+  "scripts": {},
   "author": "Vic Lin",
   "license": "MIT",
   "dependencies": {
-    "libcamera": "^1.0.7"
+    "libcamera": "^1.0.7",
+    "looks-same": "^9.0.0",
+    "pixelmatch": "^5.3.0"
   },
   "keywords": "raspberry pi, camera"
 }

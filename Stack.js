@@ -24,9 +24,10 @@ Job.prototype.exec = function(){
 }
 
 // stack
-function Stack(intervalTime){
+function Stack(intervalTime, timeoutTime){
 	this.list = [];	
 	this.running = false;
+	this.timeoutTime = timeoutTime;
 	this.timeoutID = undefined;
 	this.intervalTime = intervalTime;
 	this.intervalID = undefined;
@@ -39,12 +40,12 @@ Stack.prototype.addJob = function(job){
 /* 
  * @description 超過時間沒反應 自動reset狀態
  */
-Stack.prototype.timeout = function(s){
+Stack.prototype.timeout = function(){
 	const tthis = this;
 	this.timeoutID = setTimeout(() => {
 		tthis.running = false;
 		tthis.resetTimeout();
-	}, s * 1000);
+	}, this.timeoutTime * 1000);
 }
 
 /*
@@ -74,7 +75,7 @@ Stack.prototype.start = function(){
 		if ((tthis.list.length > 0) && !tthis.running) {
 			tthis.running = true;
 			const item = tthis.list.pop();
-			tthis.timeout(10)
+			tthis.timeout()
 			item.exec()
 				.then(result => {
 					console.log('job exec successed')

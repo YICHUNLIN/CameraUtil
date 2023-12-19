@@ -18,29 +18,23 @@ function Camera(option, onCapSucc, onCapErr){
 	this.output = option.output;
 	this.delaySecond = option.delaySecond;
 	this.type = option.type;
-	this.onCapSucc = onCapzSucc;
+	this.onCapSucc = onCapSucc;
 	this.onCapErr = onCapErr;
-	this.server_url = option.server_url;
-
-	this.uploadingStack = [];// 處理上傳中的stack
+	this.nameFormat = option.nameFormat;
 }
+
 
 /*
  * @description photo method
  * @method libcamera.still
  * */
-Camera.prototype.__photo == function(){
+Camera.prototype.methodSwitch = function(){
 	const tthis = this;
-	return libcamera.still({ config: { output: tthis.output } });
-}
-
-/*
- * @description video method
- * @method libcamera.vid
- * */
-Camera.prototype.__video = function(){
-	const tthis = this;
-	return libcamera.vid({ config: {output: tthis.output}});
+	if (tthis.type == "photo")
+		return libcamera.jpeg({ config: { output: `${tthis.output}@${tthis.nameFormat()}` } });
+	else if (tthis.type == "video")
+		return libcamera.vid({ config: {output: `${tthis.output}@${tthis.nameFormat()}`}});
+	return null;
 }
 
 /*
@@ -49,14 +43,22 @@ Camera.prototype.__video = function(){
  * */
 Camera.prototype.start = function(){
 	const tthis = this;
-	let op = null;
-	if (this.type == "vodeo") op = tthis.__video;
-	else if (this.type == "photo") op = tthis.__photo;
-	if (!op) return {result: false, message: `camera start error, op = null`};
+	let cam_status = false;
 	this.intervalID = setInterval(() => {
-		op
-		.then(result => tthis.onCapSucc(result))
-		.catch(err => tthis.onCapzErr(err));
+		if (!cam_status){
+			cam_status = true;
+			tthis.methodSwitch()
+				.then(result => {
+					tthis.onCapSucc(result)
+					cam_status = false;
+				})
+				.catch(err => {
+					tthis.onCapErr(err)
+					cam_status = false;
+				});
+		}else {
+			console.log("cam is in process.")
+		}
 	}, this.delaySecond * 1000);
 	return {result: true, message: `camera start successed!`};
 }
@@ -72,16 +74,6 @@ Camera.prototype.end = function(){
 	return {result: true}
 }
 
-Camera.prototype.__deStack = function(){
-	if (this.uploadingStack.length > 0) {
-		const first = this.uploadingStack.pop();
-	}
-}
 
-Camera.prototype.saveToServer = function(){
-	// axios call api
-	if (!this.server_url) throw new Error("server_url is not avaliable or not exist");
-	// if successed delete file
-}
 
 module.exports = Camera;
