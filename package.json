@@ -1,14 +1,15 @@
 {
-  "name": "test",
+  "name": "CameraUtil",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+
   },
-  "author": "",
+  "author": "Vic Lin",
   "license": "MIT",
   "dependencies": {
     "libcamera": "^1.0.7"
-  }
+  },
+  "keywords": "raspberry pi, camera"
 }

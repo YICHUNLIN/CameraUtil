@@ -20,6 +20,9 @@ function Camera(option, onCapSucc, onCapErr){
 	this.type = option.type;
 	this.onCapSucc = onCapzSucc;
 	this.onCapErr = onCapErr;
+	this.server_url = option.server_url;
+
+	this.uploadingStack = [];// 處理上傳中的stack
 }
 
 /*
@@ -67,6 +70,18 @@ Camera.prototype.end = function(){
 	clearInterval(this.intervalID);
 	this.intervalID = undefined;
 	return {result: true}
+}
+
+Camera.prototype.__deStack = function(){
+	if (this.uploadingStack.length > 0) {
+		const first = this.uploadingStack.pop();
+	}
+}
+
+Camera.prototype.saveToServer = function(){
+	// axios call api
+	if (!this.server_url) throw new Error("server_url is not avaliable or not exist");
+	// if successed delete file
 }
 
 module.exports = Camera;
