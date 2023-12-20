@@ -2,16 +2,18 @@ const Camera = require('./index');
 
 const camera = new Camera(
 	{
-		delaySecond: 5,
-		type: 'photo',
-		output: '',
+		delaySecond: 300,
+		//type: 'photo',
+		type: 'video',
+		output: '~/photos',
 		nameFormat: () => {
 			const d = new Date();
 			console.log(d)
-			return `${d.getYear()}-${d.getMonth()}-${d.getDay()}-${d.getTime()}.jpg`
+			return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}-${d.getTime()}.h264`
+			//return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}-${d.getTime()}.jpg`
 		}
 	}, (success) => {
-		console.lg(success, 'cap finish')
+		console.log(success, 'oo cap finish')
 	}, (error) => {
 		console.log(errork, 'cap error')
 	}

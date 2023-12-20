@@ -29,12 +29,9 @@ function Camera(option, onCapSucc, onCapErr){
  * @method libcamera.still
  * */
 Camera.prototype.methodSwitch = function(){
-	const tthis = this;
-	if (tthis.type == "photo")
-		return libcamera.jpeg({ config: { output: `${tthis.output}@${tthis.nameFormat()}` } });
-	else if (tthis.type == "video")
-		return libcamera.vid({ config: {output: `${tthis.output}@${tthis.nameFormat()}`}});
-	return null;
+	if (this.type == "video")
+		return libcamera.vid({config: { output: `${this.output}/${this.nameFormat()}`}, timeout: 1000 * this.delaySecond})
+	return libcamera.still({ config: { output: `${this.output}/${this.nameFormat()}` } });
 }
 
 /*
@@ -47,7 +44,7 @@ Camera.prototype.start = function(){
 	this.intervalID = setInterval(() => {
 		if (!cam_status){
 			cam_status = true;
-			tthis.methodSwitch()
+			tthis.methodSwitch()	
 				.then(result => {
 					tthis.onCapSucc(result)
 					cam_status = false;
