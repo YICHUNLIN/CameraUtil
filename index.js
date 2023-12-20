@@ -29,9 +29,15 @@ function Camera(option, onCapSucc, onCapErr){
  * @method libcamera.still
  * */
 Camera.prototype.methodSwitch = function(){
+	let method = null;
+	const fn = `${this.nameFormat()}`;
 	if (this.type == "video")
-		return libcamera.vid({config: { output: `${this.output}/${this.nameFormat()}`}, timeout: 1000 * this.delaySecond})
-	return libcamera.still({ config: { output: `${this.output}/${this.nameFormat()}` } });
+		method = libcamera.vid({config: { output: `${this.output}/${fn}`, timeout: 300000}, timeout: 500000})
+	else method = libcamera.still({ config: { output: `${this.output}/${fn}`}});
+	return new Promise((resolve, reject) => {
+		method.then(successed => resolve(fn))
+		.catch(err => reject(err));
+	})
 }
 
 /*
