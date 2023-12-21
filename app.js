@@ -16,10 +16,7 @@ const upload = new Uploading({
 	client_id
 });
 
-let x = false;
 setInterval(() => {
-	if (x) return;
-	x = true;
 	upload.check(r => {
 		console.log(r.length)
 		r.forEach(m => {

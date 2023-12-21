@@ -8,6 +8,7 @@ function Uploading(options){
 	this.dir = options.dir;
 	this.cam = options.cam;
 	this.client_id = options.client_id;
+	this.q = {};
 
 }
 
@@ -19,12 +20,14 @@ Uploading.prototype.check = function(cb){
     		//handling error
     		if (err) return console.log('Unable to scan directory: ' + err);	 
     		//listing all files using forEach
-    		files.forEach(function (file) {
+    		files.filter(f => !tthis.q.hasOwnProperty(f)).forEach(function (file) {
+			console.log(file)
 			const gs = file.match(fnrgx);
 			const ymd = `${gs[1]}-${gs[2]}-${gs[3]}`;
 			const content = (resolve, reject) => {
 				fs.readFile(`${tthis.dir}/${file}`, function(err, data) {
-					if (err) return reject(err)
+					if (err) return reject(err);
+					tthis.q[file] = 1;
 					const fd = new FormData();
 					fd.append('media', data, {filename: file});
 					const url = `${tthis.url}?client_id=${tthis.client_id}&cam=${tthis.cam}&group=${ymd}`
@@ -37,6 +40,7 @@ Uploading.prototype.check = function(cb){
 						console.log(error,  body)
 						if (error) return reject(error);
 						console.log(`on upload ${file}`)
+						delete tthis.q[file];
 						fs.unlink(`${tthis.dir}/${file}`, (err) => {
  							 if (err) {
     								reject(err);
